@@ -29,22 +29,17 @@ class PizzaService
     {
         // Use the CalculationService for calculate total from items
         $totalPrice = CalculationService::calculateTotalPrice($data['ingredients']);
-
         // Create the pizza
         $pizza = Pizza::create([
             'name' => $data['name'],
             'price' => $totalPrice, // Store the calculated total price
         ]);
-
+        // Add ingredients to Pizza
+        $pizza->ingredients()->attach($data['ingredients']);
         // Use the imageService to upload image
         if (isset($data['image'])) {
             $pizza->image = $this->imageService->uploadImage($data['image']);
             $pizza->save(); // Save the pizza with the new image path
-        }
-
-        // Attach selected ingredients
-        if (isset($data['ingredients'])) {
-            $pizza->ingredients()->attach($data['ingredients']);
         }
 
         return $pizza; // Return the created pizza
@@ -60,23 +55,22 @@ class PizzaService
      */
     public function updatePizza(Pizza $pizza, array $data): Pizza
     {
+        // Use the CalculationService for calculate total from items
         $totalPrice = CalculationService::calculateTotalPrice($data['ingredients'] ?? []);
-
+        // Update the pizza
         $pizza->update([
             'name' => $data['name'],
             'price' => $totalPrice,
         ]);
-
+        // Link ingredients to Pizza
+        $pizza->ingredients()->sync($data['ingredients']);
+        // Delete old image and upload new, trought imageService
         if (isset($data['image'])) {
             if ($pizza->image) {
                 $this->imageService->deleteImage($pizza->image);
             }
             $pizza->image = $this->imageService->uploadImage($data['image']);
             $pizza->save();
-        }
-
-        if (isset($data['ingredients'])) {
-            $pizza->ingredients()->sync($data['ingredients']);
         }
 
         return $pizza;
