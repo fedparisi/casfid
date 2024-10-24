@@ -2,9 +2,10 @@
 
 namespace App\Services;
 
-use App\Models\Ingredient;
 use App\Models\Pizza;
 use CalculationService;
+use ImageService;
+
 
 /**
  * Class PizzaService
@@ -12,13 +13,7 @@ use CalculationService;
  */
 class PizzaService
 {
-    protected $imageService;
-
-    public function __construct(ImageService $imageService)
-    {
-        $this->imageService = $imageService;
-    }
-
+  
     /**
      * Create a new pizza and calculate its total price.
      *
@@ -32,14 +27,14 @@ class PizzaService
         // Create the pizza
         $pizza = Pizza::create([
             'name' => $data['name'],
-            'price' => $totalPrice, // Store the calculated total price
+            'price' => $totalPrice, 
         ]);
         // Add ingredients to Pizza
         $pizza->ingredients()->attach($data['ingredients']);
         // Use the imageService to upload image
         if (isset($data['image'])) {
-            $pizza->image = $this->imageService->uploadImage($data['image']);
-            $pizza->save(); // Save the pizza with the new image path
+            $pizza->image = ImageService::uploadImage($data['image']);
+            $pizza->save(); 
         }
 
         return $pizza; // Return the created pizza
@@ -66,8 +61,8 @@ class PizzaService
         $pizza->ingredients()->sync($data['ingredients']);
         // Delete old image and upload new, trought imageService
         if (isset($data['image'])) {
-            $this->imageService->deleteImage($data['image']);
-            $pizza->image = $this->imageService->uploadImage($data['image']);
+            ImageService::deleteImage($data['image']);
+            $pizza->image = ImageService::uploadImage($data['image']);
             $pizza->save();
         }
 

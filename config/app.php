@@ -124,8 +124,9 @@ return [
     ],
 
     'aliases' => [
-        'PizzaService' => App\Services\PizzaFacade::class,
-        'CalculationService' => App\Services\CalculationFacade::class,
+        'PizzaService' => App\Services\Facades\PizzaFacade::class,
+        'CalculationService' => App\Services\Facades\CalculationFacade::class,
+        'ImageService' => App\Services\Facades\ImageFacade::class,
     ],
 
 ];

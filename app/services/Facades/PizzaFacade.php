@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\Facades;
 
 use Illuminate\Support\Facades\Facade;
 use App\Services\PizzaService;
