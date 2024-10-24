@@ -12,9 +12,9 @@
                     <label for="email" class="form-label">Correo Electrónico</label>
                     <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autofocus>
                     @error('email')
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
                     @enderror
                 </div>
 
@@ -22,9 +22,9 @@
                     <label for="password" class="form-label">Contraseña</label>
                     <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required>
                     @error('password')
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
+                    <span class="invalid-feedback" role="alert">
+                        <strong>{{ $message }}</strong>
+                    </span>
                     @enderror
                 </div>
 
@@ -37,6 +37,9 @@
 
                 <div class="d-grid">
                     <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
+                </div>
+                <div class="mt-3">
+                    <p>No tienes una cuenta? <a href="{{ route('register') }}">Regístrate aquí</a>.</p>
                 </div>
             </form>
         </div>
