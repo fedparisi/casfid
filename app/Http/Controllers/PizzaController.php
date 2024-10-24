@@ -6,8 +6,8 @@ use App\Http\Requests\CreatePizzaRequest;
 use App\Http\Requests\UpdatePizzaRequest;
 use App\Models\Pizza;
 use App\Models\Ingredient;
-
-use App\Services\PizzaService;
+// Facade
+use PizzaService;
 
 /**
  * Class PizzaController
@@ -15,13 +15,6 @@ use App\Services\PizzaService;
  */
 class PizzaController extends Controller
 {
-    protected $pizzaService;
-
-    public function __construct(PizzaService $pizzaService)
-    {
-        $this->pizzaService = $pizzaService; // Initialize PizzaService
-    }
-
     /**
      * Display a listing of pizzas with their ingredients.
      *
@@ -53,7 +46,7 @@ class PizzaController extends Controller
     public function store(CreatePizzaRequest $request)
     {
         // Use PizzaService to create a new pizza
-        $this->pizzaService->createPizza($request->validated());
+        PizzaService::createPizza($request->validated());
         return redirect()->route('pizzas.index')->with('success', 'Pizza created successfully.');
     }
 
@@ -79,7 +72,7 @@ class PizzaController extends Controller
     public function update(UpdatePizzaRequest $request, Pizza $pizza)
     {
         // Use PizzaService to update the pizza
-        $this->pizzaService->updatePizza($pizza, $request->validated());
+        PizzaService::updatePizza($pizza, $request->validated());
         return redirect()->route('pizzas.index')->with('success', 'Pizza updated successfully.');
     }
 
@@ -92,7 +85,7 @@ class PizzaController extends Controller
     public function destroy(Pizza $pizza)
     {
         // Use PizzaService to delete the pizza
-        $this->pizzaService->deletePizza($pizza);
+        PizzaService::deletePizza($pizza);
         return redirect()->route('pizzas.index')->with('success', 'Pizza deleted successfully.');
     }
 }

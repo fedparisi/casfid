@@ -22,7 +22,7 @@
                     <td>{{ $pizza->id }}</td>
                     <td>{{ $pizza->name }}</td>
                     <td>
-                        <img src="{{ asset('storage/' . $pizza->image) }}" alt="{{ $pizza->name }}" style="width: 100px;">
+                        <img src="{{ asset('storage/' . $pizza->image) }}" alt="{{ $pizza->image }}" style="width: 100px;">
                     </td>
                     <td>
                         <a href="{{ route('pizzas.edit', $pizza->id) }}" class="btn btn-warning btn-sm">Editar</a>

@@ -40,7 +40,5 @@
     <p>No hay ingredientes disponibles.</p>
     @endif
 
-    <!-- Botón de Agregar Ingrediente -->
-
 </div>
 @endsection

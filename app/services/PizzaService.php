@@ -30,7 +30,7 @@ class PizzaService
             'name' => $data['name'],
         ]);
 
-        // Handle image upload using imageService
+        // Use the imageService to upload image
         if (isset($data['image'])) {
             $pizza->image = $this->imageService->uploadImage($data['image']);
             $pizza->save(); // Save the pizza with the new image path
@@ -58,7 +58,7 @@ class PizzaService
 
         // Handle image upload if an image is provided
         if (isset($data['image'])) {
-            // Delete old image from storage
+            // Use imageService to delete old image from storage
             $this->imageService->deleteImage($pizza->image);
             // Upload new image
             $pizza->image = $this->imageService->uploadImage($data['image']);
