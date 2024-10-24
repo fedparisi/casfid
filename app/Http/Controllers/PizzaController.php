@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Pizza;
-use App\Models\Ingredient;
 use App\Http\Requests\CreatePizzaRequest;
 use App\Http\Requests\UpdatePizzaRequest;
-use Illuminate\Http\Request;
+use App\Models\Pizza;
+use App\Models\Ingredient;
+
+use App\Services\PizzaService;
 
 /**
  * Class PizzaController
@@ -14,6 +15,13 @@ use Illuminate\Http\Request;
  */
 class PizzaController extends Controller
 {
+    protected $pizzaService;
+
+    public function __construct(PizzaService $pizzaService)
+    {
+        $this->pizzaService = $pizzaService; // Initialize PizzaService
+    }
+
     /**
      * Display a listing of pizzas with their ingredients.
      *
@@ -44,23 +52,9 @@ class PizzaController extends Controller
      */
     public function store(CreatePizzaRequest $request)
     {
-        // Create pizza
-        $pizza = Pizza::create([
-            'name' => $request->name,
-            'price' => $request->price,
-        ]);
-
-        // Handle image upload
-        if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('images', 'public'); 
-            $pizza->image = $imagePath; 
-            $pizza->save();
-        }
-
-        // Attach selected ingredients
-        $pizza->ingredients()->attach($request->ingredients);
-
-        return redirect()->route('pizzas.index')->with('success', 'Pizza created successfully.'); // Redirect with success message
+        // Use PizzaService to create a new pizza
+        $this->pizzaService->createPizza($request->validated());
+        return redirect()->route('pizzas.index')->with('success', 'Pizza created successfully.');
     }
 
     /**
@@ -84,22 +78,9 @@ class PizzaController extends Controller
      */
     public function update(UpdatePizzaRequest $request, Pizza $pizza)
     {
-        // Update pizza details
-        $pizza->update($request->only('name', 'price'));
-        if ($request->hasFile('image')) {
-            // Delete the old image from storage if it exists
-            if ($pizza->image) {
-                \Storage::delete('public/' . $pizza->image); 
-            }
-            $imagePath = $request->file('image')->store('images', 'public'); // Store new image
-            $pizza->image = $imagePath; // Update image path
-            $pizza->save(); // Save changes
-        }
-
-        // Update ingredients
-        $pizza->ingredients()->sync($request->ingredients);
-
-        return redirect()->route('pizzas.index')->with('success', 'Pizza updated successfully.'); // Redirect with success message
+        // Use PizzaService to update the pizza
+        $this->pizzaService->updatePizza($pizza, $request->validated());
+        return redirect()->route('pizzas.index')->with('success', 'Pizza updated successfully.');
     }
 
     /**
@@ -110,14 +91,8 @@ class PizzaController extends Controller
      */
     public function destroy(Pizza $pizza)
     {
-        // Delete image if exists
-        if ($pizza->image) {
-            \Storage::delete('public/' . $pizza->image); 
-        }
-
-        $pizza->delete();
-
-        return redirect()->route('pizzas.index')->with('success', 'Pizza deleted successfully.'); 
+        // Use PizzaService to delete the pizza
+        $this->pizzaService->deletePizza($pizza);
+        return redirect()->route('pizzas.index')->with('success', 'Pizza deleted successfully.');
     }
-
 }
