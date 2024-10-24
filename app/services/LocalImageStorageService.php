@@ -2,13 +2,14 @@
 
 namespace App\Services;
 
+use App\Contracts\ImageStorageInterface;
 use Illuminate\Support\Facades\Storage;
 
 /**
- * Class ImageService
- * Handles image uploads and management.
+ * Class LocalImageStorageService
+ * Implements image storage using Laravel's local storage system.
  */
-class ImageService
+class LocalImageStorageService implements ImageStorageInterface
 {
     /**
      * Upload an image and return the path.
@@ -19,13 +20,13 @@ class ImageService
     public function uploadImage($image)
     {
         if ($image) {
-            return $image->store('images', 'public'); 
+            return $image->store('images', 'public'); // Store in 'storage/app/public/images'
         }
-        return null; 
+        return null;
     }
 
     /**
-     * Delete an image from storage.
+     * Delete an image from local storage.
      *
      * @param  string  $imagePath
      * @return void
@@ -33,7 +34,7 @@ class ImageService
     public function deleteImage($imagePath)
     {
         if ($imagePath) {
-            Storage::delete('public/' . $imagePath); 
+            Storage::delete('public/' . $imagePath); // Delete from 'storage/app/public/images'
         }
     }
 }

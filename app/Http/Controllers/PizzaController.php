@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Contracts\ImageStorageInterface;
 use App\Http\Requests\CreatePizzaRequest;
 use App\Http\Requests\UpdatePizzaRequest;
 use App\Models\Pizza;

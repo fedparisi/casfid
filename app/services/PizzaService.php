@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Contracts\ImageStorageInterface;
 use App\Models\Pizza;
 use CalculationService;
 use ImageService;
@@ -14,6 +15,13 @@ use ImageService;
 class PizzaService
 {
   
+    protected $imageStorage;
+
+    // Interface, allows change implementation in run time
+    public function __construct(ImageStorageInterface $imageStorage)
+    {
+        $this->imageStorage = $imageStorage;
+    }
     /**
      * Create a new pizza and calculate its total price.
      *
@@ -33,7 +41,7 @@ class PizzaService
         $pizza->ingredients()->attach($data['ingredients']);
         // Use the imageService to upload image
         if (isset($data['image'])) {
-            $pizza->image = ImageService::uploadImage($data['image']);
+            $pizza->image = $this->imageStorage->uploadImage($data['image']);
             $pizza->save(); 
         }
 
@@ -61,8 +69,8 @@ class PizzaService
         $pizza->ingredients()->sync($data['ingredients']);
         // Delete old image and upload new, trought imageService
         if (isset($data['image'])) {
-            ImageService::deleteImage($data['image']);
-            $pizza->image = ImageService::uploadImage($data['image']);
+            $this->imageStorage->deleteImage($data['image']);
+            $pizza->image = $this->imageStorage->uploadImage($data['image']);
             $pizza->save();
         }
 
@@ -79,7 +87,7 @@ class PizzaService
     public function deletePizza(Pizza $pizza)
     {
         // Delete image if exists
-        $this->imageService->deleteImage($pizza->image);
+        $this->imageStorage->deleteImage($pizza->image);
         $pizza->delete(); // Delete the pizza
     }
 }
