@@ -25,7 +25,7 @@ class PizzaService
      * @param array $data
      * @return Pizza
      */
-    public function createPizza(array $data)
+    public function createPizza(array $data): Pizza
     {
         // Use the CalculationService for calculate total from items
         $totalPrice = CalculationService::calculateTotalPrice($data['ingredients']);
@@ -56,7 +56,7 @@ class PizzaService
     public function updatePizza(Pizza $pizza, array $data): Pizza
     {
         // Use the CalculationService for calculate total from items
-        $totalPrice = CalculationService::calculateTotalPrice($data['ingredients'] ?? []);
+        $totalPrice = CalculationService::calculateTotalPrice($data['ingredients']);
         // Update the pizza
         $pizza->update([
             'name' => $data['name'],
@@ -66,9 +66,7 @@ class PizzaService
         $pizza->ingredients()->sync($data['ingredients']);
         // Delete old image and upload new, trought imageService
         if (isset($data['image'])) {
-            if ($pizza->image) {
-                $this->imageService->deleteImage($pizza->image);
-            }
+            $this->imageService->deleteImage($data['image']);
             $pizza->image = $this->imageService->uploadImage($data['image']);
             $pizza->save();
         }

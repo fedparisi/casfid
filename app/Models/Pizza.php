@@ -23,7 +23,7 @@ class Pizza extends Model
      */
     public function ingredients()
     {
-        return $this->belongsToMany(Ingredient::class)->withTimestamps();
+        return $this->belongsToMany(Ingredient::class, 'ingredient_pizza');
     }
 
     /**
