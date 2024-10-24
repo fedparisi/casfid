@@ -45,7 +45,6 @@ class PizzaController extends Controller
      */
     public function store(CreatePizzaRequest $request)
     {
-        // Use PizzaService to create a new pizza
         PizzaService::createPizza($request->validated());
         return redirect()->route('pizzas.index')->with('success', 'Pizza created successfully.');
     }
@@ -71,7 +70,6 @@ class PizzaController extends Controller
      */
     public function update(UpdatePizzaRequest $request, Pizza $pizza)
     {
-        // Use PizzaService to update the pizza
         PizzaService::updatePizza($pizza, $request->validated());
         return redirect()->route('pizzas.index')->with('success', 'Pizza updated successfully.');
     }
@@ -84,7 +82,6 @@ class PizzaController extends Controller
      */
     public function destroy(Pizza $pizza)
     {
-        // Use PizzaService to delete the pizza
         PizzaService::deletePizza($pizza);
         return redirect()->route('pizzas.index')->with('success', 'Pizza deleted successfully.');
     }

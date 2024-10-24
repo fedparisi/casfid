@@ -13,6 +13,7 @@
                 <th>ID</th>
                 <th>Nombre</th>
                 <th>Imagen</th>
+                <th>Valor</th>
                 <th>Acciones</th>
             </tr>
         </thead>
@@ -24,6 +25,9 @@
                     <td>
                         <img src="{{ asset('storage/' . $pizza->image) }}" alt="{{ $pizza->image }}" style="width: 100px;">
                     </td>
+               
+                    <td>{{ $pizza->price }}</td>
+
                     <td>
                         <a href="{{ route('pizzas.edit', $pizza->id) }}" class="btn btn-warning btn-sm">Editar</a>
                         <form action="{{ route('pizzas.destroy', $pizza->id) }}" method="POST" style="display:inline;">

@@ -14,7 +14,7 @@ class Pizza extends Model
      *
      * @var array
      */
-    protected $fillable = ['name', 'image'];
+    protected $fillable = ['name', 'image', 'price'];
 
     /**
      * Get the ingredients for the pizza.
