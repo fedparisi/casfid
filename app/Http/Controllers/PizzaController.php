@@ -4,111 +4,120 @@ namespace App\Http\Controllers;
 
 use App\Models\Pizza;
 use App\Models\Ingredient;
+use App\Http\Requests\CreatePizzaRequest;
+use App\Http\Requests\UpdatePizzaRequest;
 use Illuminate\Http\Request;
 
+/**
+ * Class PizzaController
+ * Handles the operations related to pizzas.
+ */
 class PizzaController extends Controller
 {
-    // Muestra una lista de las pizzas
+    /**
+     * Display a listing of pizzas with their ingredients.
+     *
+     * @return \Illuminate\View\View
+     */
     public function index()
     {
-        $pizzas = Pizza::with('ingredients')->get(); // Carga las pizzas con sus ingredientes
+        $pizzas = Pizza::with('ingredients')->get(); 
         return view('pizzas.index', compact('pizzas'));
     }
 
-    // Muestra el formulario para crear una nueva pizza
+    /**
+     * Show the form for creating a new pizza.
+     *
+     * @return \Illuminate\View\View
+     */
     public function create()
     {
-        $ingredients = Ingredient::all(); // Obtiene todos los ingredientes
+        $ingredients = Ingredient::all(); 
         return view('pizzas.create', compact('ingredients'));
     }
 
-    public function store(Request $request)
+    /**
+     * Store a newly created pizza in the database.
+     *
+     * @param  \App\Http\Requests\CreatePizzaRequest  $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function store(CreatePizzaRequest $request)
     {
-
-        // Validar la entrada
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'image' => 'nullable|image|max:2048', // Cambiado a 'nullable' y validado como imagen
-            'ingredients' => 'required|array',
-            'ingredients.*' => 'exists:ingredients,id', // Verifica que cada ingrediente existe
-        ]);
-        
+        // Create pizza
         $pizza = Pizza::create([
             'name' => $request->name,
-            'image' => $request->image,
             'price' => $request->price,
         ]);
 
+        // Handle image upload
         if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('images', 'public');
-            $pizza->image = $imagePath;
+            $imagePath = $request->file('image')->store('images', 'public'); 
+            $pizza->image = $imagePath; 
             $pizza->save();
         }
 
-        // Relacionar los ingredientes seleccionados
+        // Attach selected ingredients
         $pizza->ingredients()->attach($request->ingredients);
 
-        return redirect()->route('pizzas.index')->with('success', 'Pizza creada exitosamente.');
+        return redirect()->route('pizzas.index')->with('success', 'Pizza created successfully.'); // Redirect with success message
     }
 
-    public function update(Request $request, Pizza $pizza)
-    {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'image' => 'nullable|image|max:2048', // Cambiado a 'nullable' y validado como imagen
-            'ingredients' => 'required|array',
-            'ingredients.*' => 'exists:ingredients,id', // Verifica que cada ingrediente existe
-        ]);
-
-        // dd($pizza->image);
-
-        // Actualizar la pizza
-        $pizza->update($request->only('name', 'description'));
-
-        // Actualizar los ingredientes
-        $pizza->ingredients()->sync($request->ingredients);
-
-        // Manejar la subida de imágenes si existe
-        if ($request->hasFile('image')) {
-            $imagePath = $request->file('image')->store('images', 'public');
-            $pizza->image = $imagePath;
-            $pizza->save();
-        }
-
-        return redirect()->route('pizzas.index')->with('success', 'Pizza actualizada exitosamente.');
-    }
-
-    // Muestra una pizza específica
-    public function show(Pizza $pizza)
-    {
-        return view('pizzas.show', compact('pizza'));
-    }
-
-    // Muestra el formulario para editar una pizza
+    /**
+     * Show the form for editing the specified pizza.
+     *
+     * @param  \App\Models\Pizza  $pizza
+     * @return \Illuminate\View\View
+     */
     public function edit(Pizza $pizza)
     {
-        $ingredients = Ingredient::all();
+        $ingredients = Ingredient::all(); 
         return view('pizzas.edit', compact('pizza', 'ingredients'));
     }
 
-
-    // Elimina una pizza de la base de datos
-    public function destroy(Pizza $pizza)
+    /**
+     * Update the specified pizza in the database.
+     *
+     * @param  \App\Http\Requests\UpdatePizzaRequest  $request
+     * @param  \App\Models\Pizza  $pizza
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function update(UpdatePizzaRequest $request, Pizza $pizza)
     {
-        // Borra la imagen si existe
-        if ($pizza->image) {
-            \Storage::delete('public/' . $pizza->image);
+        // Update pizza details
+        $pizza->update($request->only('name', 'price'));
+        if ($request->hasFile('image')) {
+            // Delete the old image from storage if it exists
+            if ($pizza->image) {
+                \Storage::delete('public/' . $pizza->image); 
+            }
+            $imagePath = $request->file('image')->store('images', 'public'); // Store new image
+            $pizza->image = $imagePath; // Update image path
+            $pizza->save(); // Save changes
         }
 
-        $pizza->delete(); // Elimina la pizza
+        // Update ingredients
+        $pizza->ingredients()->sync($request->ingredients);
 
-        return redirect()->route('pizzas.index')->with('success', 'Pizza eliminada exitosamente.');
+        return redirect()->route('pizzas.index')->with('success', 'Pizza updated successfully.'); // Redirect with success message
     }
 
-    // Método adicional para obtener todas las pizzas con sus ingredientes
-    public function getPizzasConIngredientes()
+    /**
+     * Remove the specified pizza from the database.
+     *
+     * @param  \App\Models\Pizza  $pizza
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function destroy(Pizza $pizza)
     {
-        $pizzas = Pizza::with('ingredients')->get(); // Carga las pizzas con sus ingredientes
-        return response()->json($pizzas); // Devuelve las pizzas como JSON
+        // Delete image if exists
+        if ($pizza->image) {
+            \Storage::delete('public/' . $pizza->image); 
+        }
+
+        $pizza->delete();
+
+        return redirect()->route('pizzas.index')->with('success', 'Pizza deleted successfully.'); 
     }
+
 }
