@@ -92,7 +92,6 @@ class PizzaController extends Controller
     }
 
 
-
     // Elimina una pizza de la base de datos
     public function destroy(Pizza $pizza)
     {

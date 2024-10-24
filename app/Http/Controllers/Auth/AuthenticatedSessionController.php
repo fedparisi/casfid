@@ -42,6 +42,6 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerateToken();
 
-        return redirect()->route('login')->with('success', 'Has cerrado sesión correctamente.');
+        return redirect()->route('pizzas.index')->with('success', 'Has cerrado sesión correctamente.');
     }
 }

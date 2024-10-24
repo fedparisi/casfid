@@ -14,8 +14,16 @@
 <body>
     <div id="app">
         @include('layouts.navigation') <!-- Incluye tu navegación aquí -->
+        
         <main class="container mt-4">
-            @yield('content')
+            <div class="card">
+                <div class="card-header">
+                    <h1 class="h5">@yield('card-title')</h1> <!-- El título de la tarjeta -->
+                </div>
+                <div class="card-body">
+                    @yield('content') <!-- Contenido de la tarjeta -->
+                </div>
+            </div>
         </main>
     </div>
     

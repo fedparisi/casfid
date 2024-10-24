@@ -1,9 +1,8 @@
 @extends('layouts.app')
 
+@section('card-title', isset($pizza->id) ? 'Editar Pizza' : 'Crear Pizza')
+
 @section('content')
-<div class="container mt-4">
-    <h1>{{ isset($pizza->id) ? 'Editar Pizza' : 'Crear Pizza' }}</h1>
-    
     <form method="POST" action="{{ isset($pizza) ? route('pizzas.update', $pizza->id) : route('pizzas.store') }}" enctype="multipart/form-data">
         @csrf
         @if (isset($pizza))
@@ -35,8 +34,9 @@
             @endif
         </div>
 
-        <button type="submit" class="btn btn-primary">{{ isset($pizza) ? 'Actualizar' : 'Crear' }}</button>
-        <a href="{{ route('pizzas.index') }}" class="btn btn-secondary">Cancelar</a>
+        <div class="d-flex justify-content-end">
+            <button type="submit" class="btn btn-primary mr-2">{{ isset($pizza) ? 'Actualizar' : 'Crear' }}</button>
+            <a href="{{ route('pizzas.index') }}" class="btn btn-secondary">Cancelar</a>
+        </div>
     </form>
-</div>
 @endsection

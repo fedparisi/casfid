@@ -1,9 +1,11 @@
-<!-- resources/views/pizzas/index.blade.php -->
 @extends('layouts.app')
 
+@section('card-title', 'Listado de Pizzas') <!-- Título de la tarjeta -->
+
 @section('content')
-    <h1 class="mb-4">Listado de Pizzas</h1>
-    <a href="{{ route('pizzas.create') }}" class="btn btn-primary mb-3">Crear Pizza</a>
+    <div class="d-flex justify-content-end mb-3">
+        <a href="{{ route('pizzas.create') }}" class="btn btn-primary">Crear Pizza</a>
+    </div>
 
     <table class="table table-bordered">
         <thead>
@@ -20,7 +22,7 @@
                     <td>{{ $pizza->id }}</td>
                     <td>{{ $pizza->name }}</td>
                     <td>
-                      <img src="{{ asset('storage/' . $pizza->image) }}" alt="{{ $pizza->name }}" style="width: 100px;">
+                        <img src="{{ asset('storage/' . $pizza->image) }}" alt="{{ $pizza->name }}" style="width: 100px;">
                     </td>
                     <td>
                         <a href="{{ route('pizzas.edit', $pizza->id) }}" class="btn btn-warning btn-sm">Editar</a>

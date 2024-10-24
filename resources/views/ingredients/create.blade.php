@@ -1,12 +1,10 @@
 @extends('layouts.app')
 
-@section('content')
-<div class="container">
-    <h1>Agregar Ingrediente</h1>
+@section('card-title', 'Agregar Ingrediente') <!-- Define el título de la tarjeta -->
 
+@section('content')
     <form method="POST" action="{{ route('ingredients.store') }}">
         @csrf
-
         <div class="mb-3">
             <label for="name" class="form-label">Nombre del Ingrediente</label>
             <input type="text" name="name" class="form-control" id="name" required>
@@ -17,8 +15,9 @@
             <input type="number" name="price" class="form-control" id="price" required>
         </div>
 
-        <button type="submit" class="btn btn-primary">Agregar Ingrediente</button>
-        <a href="{{ route('ingredients.index') }}" class="btn btn-secondary">Cancelar</a>
+        <div class="d-flex justify-content-end">
+            <button type="submit" class="btn btn-primary mr-2">Agregar Ingrediente</button>
+            <a href="{{ route('ingredients.index') }}" class="btn btn-secondary">Cancelar</a>
+        </div>
     </form>
-</div>
 @endsection
